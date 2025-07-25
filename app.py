@@ -98,13 +98,13 @@ def analyze_content_with_gemini(resume_content, job_description):
             return 0, "Error: Resume content is empty or invalid", []
         
         prompt = f"""
-        You are a career advisor evaluating a resume based on a provided job description. Perform the following tasks:
+        You are a strict and practical career advisor evaluating a resume based on a provided job description. Perform the following tasks:
         1. Assign a score from 0 to 100 based on how well the resume matches the job description, considering relevance of skills, experience, clarity, and coherence.
         2. Provide a brief explanation for the score, highlighting strengths and weaknesses.
         3. Suggest 2-3 specific tips for improving the resume to better align with the job description.
 
-        Job Description: {job_description[:2000]}
-        Resume Content: {resume_content[:2000]}
+        Job Description: {job_description}
+        Resume Content: {resume_content}
 
         Return the response in the following format:
         Score: [number]
