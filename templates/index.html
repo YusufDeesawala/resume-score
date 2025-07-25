@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer</title>
+</head>
+<body>
+    <h1>Resume Analyzer</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="file">Upload Resume (PDF):</label>
+        <input type="file" id="file" name="file" accept=".pdf" required><br><br>
+        
+        <label for="job_description">Job Description:</label><br>
+        <textarea id="job_description" name="job_description" rows="5" cols="50" required placeholder="Paste the job description here"></textarea><br><br>
+        
+        <button type="submit">Analyze Resume</button>
+    </form>
+
+    <div id="result">
+        <h2>Analysis Result</h2>
+        <p><strong>Score:</strong> <span id="score"></span></p>
+        <p><strong>Explanation:</strong> <span id="explanation"></span></p>
+        <p><strong>Improvement Tips:</strong></p>
+        <ul id="tips"></ul>
+        <p><strong>Resume Content Preview:</strong> <span id="content"></span></p>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById('file');
+            const jobDescription = document.getElementById('job_description').value;
+            formData.append('file', fileInput.files[0]);
+            formData.append('job_description', jobDescription);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('score').textContent = result.score;
+                    document.getElementById('explanation').textContent = result.explanation;
+                    const tipsList = document.getElementById('tips');
+                    tipsList.innerHTML = '';
+                    result.improvement_tips.forEach(tip => {
+                        const li = document.createElement('li');
+                        li.textContent = tip;
+                        tipsList.appendChild(li);
+                    });
+                    document.getElementById('content').textContent = result.content;
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                alert('Error uploading file: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
