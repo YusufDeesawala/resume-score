@@ -4,3 +4,4 @@ Pillow
 flask
 PyPDF2
 google-generativeai
+python-dotenv
